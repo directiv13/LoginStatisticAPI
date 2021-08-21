@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using LoginStatistic.Models;
 
 namespace LoginStatistic.Data
 {
-    public class IUserRepo
+    public interface IUserRepo
     {
+        bool SaveChanges();
+        User GetUserByEmail(string email);
+        void CreateUser(User user);
+        void DeleteUser(User user);
     }
 }
