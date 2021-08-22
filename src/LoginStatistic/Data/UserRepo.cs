@@ -34,11 +34,7 @@ namespace LoginStatistic.Data
         }
         public User GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
-        }
-        public void DeleteUsers()
-        {
-            _context.Database.ExecuteSqlRaw(String.Format("TRUNCATE TABLE {0}", nameof(_context.Users)));
+            return _context.Users.Where(x => x.Email == email).Include(a => a.LoginAttempts).FirstOrDefault();
         }
         public bool SaveChanges()
         {

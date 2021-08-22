@@ -11,23 +11,24 @@ namespace LoginStatistic.Controller
     public class UserController : ControllerBase
     {
         private readonly IUserRepo _repo;
-        public UserController(IUserRepo repository)
+        private readonly LoginContext _context;
+        public UserController(IUserRepo repository, LoginContext context)
         {
             _repo = repository;
+            _context = context;
         }
 
-        [HttpPost]
+        [HttpPost("{amount}", Name = "Init")]
         public ActionResult Init(int amount)
         {
-            _repo.DeleteUsers();
-            for (int i = 0; i < amount; i++)
-            {
-                Guid userGuid = Guid.NewGuid();
-                _repo.CreateUser(new User { Id = userGuid, Email = $"user{amount}@gmail.com" });
-                List<UserLoginAttempt> attempts = new List<UserLoginAttempt>();
+            SeedData.EnsurePopulated(_context, amount);
+            return Ok("Hello, wolrd");
+        }
 
-            }
-            return Ok();
+        [HttpGet("{email}", Name = "GetByEmail")]
+        public ActionResult<User> GetByEmail(string email)
+        {
+            return Ok(_repo.GetUserByEmail(email));
         }
     }
 }

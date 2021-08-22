@@ -9,6 +9,5 @@ namespace LoginStatistic.Data
         User GetUserByEmail(string email);
         void CreateUser(User user);
         void DeleteUser(User user);
-        void DeleteUsers();
     }
 }
