@@ -1,3 +1,5 @@
+using System;
+
 namespace LoginStatistic.Dtos
 {
     public class StatisticResultDto

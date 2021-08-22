@@ -12,17 +12,17 @@ namespace LoginStatistic.Controllers
     {
         private readonly IUserRepo _repo;
         private readonly LoginContext _context;
-        public UserController(IUserRepo repository, LoginContext context)
+        public UserController(IUserRepo repository)
         {
             _repo = repository;
-            _context = context;
         }
 
         [HttpPost("{amount}", Name = "Init")]
         public ActionResult Init(int amount)
         {
-            SeedData.EnsurePopulated(_context, amount);
-            return Ok("Hello, wolrd");
+            SeedData.EnsurePopulated(_repo, amount);
+            _repo.SaveChanges();
+            return Ok();
         }
 
         [HttpGet("{email}", Name = "GetByEmail")]

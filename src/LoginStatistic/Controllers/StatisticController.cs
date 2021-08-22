@@ -11,7 +11,7 @@ namespace LoginStatistic.Controllers
         [HttpPost]
         public ActionResult<IEnumerable<StatisticResultDto>> GetStatistic(StatisticCreateDto statisticCreateDto)
         {
-            
+            throw new System.NotImplementedException();
         }
     }
 }
