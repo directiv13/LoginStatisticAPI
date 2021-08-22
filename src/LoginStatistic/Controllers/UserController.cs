@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using LoginStatistic.Data;
 using LoginStatistic.Models;
 
-namespace LoginStatistic.Controller
+namespace LoginStatistic.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

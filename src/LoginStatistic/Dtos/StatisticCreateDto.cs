@@ -2,7 +2,7 @@ using System;
 
 namespace LoginStatistic.Dtos
 {
-    public class StatisticDto
+    public class StatisticCreateDto
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
