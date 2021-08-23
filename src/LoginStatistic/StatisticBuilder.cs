@@ -19,21 +19,27 @@ namespace LoginStatistic
         {
             IQueryable<UserLoginAttempt> attempts = _repo.GetAttemptsForStatistic(statisticCreateDto.StartDate, statisticCreateDto.EndDate, statisticCreateDto.IsSuccess);
 
+            Func<DateTime, DateTime> funcMetric;
             switch(statisticCreateDto.Metric)
             {
                 case (Metric.Hour):
-                    return ReturnStatistic(attempts, statisticCreateDto.StartDate, statisticCreateDto.EndDate, opt => opt.AddHours(1));
+                    funcMetric = opt => opt.AddHours(1);
+                    break;
                 case (Metric.Month):
-                    return ReturnStatistic(attempts, statisticCreateDto.StartDate, statisticCreateDto.EndDate, opt => opt.AddMonths(1));
+                    funcMetric = opt => opt.AddMonths(1);
+                    break;
                 case (Metric.Quarter):
-                    return ReturnStatistic(attempts, statisticCreateDto.StartDate, statisticCreateDto.EndDate, opt => opt.AddMonths(3));
+                    funcMetric = opt => opt.AddMonths(3);
+                    break;
                 case (Metric.Year):
-                    return ReturnStatistic(attempts, statisticCreateDto.StartDate, statisticCreateDto.EndDate, opt => opt.AddYears(1));
+                    funcMetric = opt => opt.AddYears(1);
+                    break;
                 default:
                     return null;
             }
+            return CollectStatistic(attempts, statisticCreateDto.StartDate, statisticCreateDto.EndDate, funcMetric);
         }
-        public IEnumerable<StatisticResultDto> ReturnStatistic(IQueryable<UserLoginAttempt> attempts, DateTime startTime, DateTime endTime, Func<DateTime, DateTime> funcMetric)
+        private IEnumerable<StatisticResultDto> CollectStatistic(IQueryable<UserLoginAttempt> attempts, DateTime startTime, DateTime endTime, Func<DateTime, DateTime> funcMetric)
         {
             List<StatisticResultDto> statisticResults = new List<StatisticResultDto>();
             DateTime currentEnd = funcMetric(startTime);
