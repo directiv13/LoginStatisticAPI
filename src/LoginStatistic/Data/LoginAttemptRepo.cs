@@ -22,9 +22,18 @@ namespace LoginStatistic.Data
             _context.LoginAttempts.Add(attempt);
         }
 
+
         public IEnumerable<UserLoginAttempt> GetAttemptsByUserId(Guid id)
         {
             return _context.Users.FirstOrDefault(u => u.Id == id)?.LoginAttempts;
+        }
+
+        public IQueryable<UserLoginAttempt> GetAttemptsForStatistic(DateTime start, DateTime end, bool? isSuccess)
+        {
+            return _context.LoginAttempts.Where(a => a.AttemptTime >= start && 
+                                                a.AttemptTime <= end && 
+                                                (isSuccess == null || a.IsSuccess == isSuccess))
+                .OrderBy(s => s.AttemptTime);
         }
 
         public bool SaveChanges()
