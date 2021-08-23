@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using LoginStatistic.Exceptions;
 
 namespace LoginStatistic.Data
 {
@@ -15,6 +14,7 @@ namespace LoginStatistic.Data
         {
             _context = context;
         }
+        public IQueryable<User> Users => _context.Users;
         public void CreateUser(User user)
         {
             if(user == null)
@@ -22,7 +22,7 @@ namespace LoginStatistic.Data
                 throw new ArgumentNullException();
             }
 
-            _context.Users.Add(user);
+            _context.Add(user);
         }
         public void DeleteUser(User user)
         {
@@ -31,11 +31,12 @@ namespace LoginStatistic.Data
                 throw new ArgumentNullException();
             }
 
-            _context.Users.Remove(user);
+            _context.Remove(user);
         }
         public void DeleteUsers()
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            //First approach
+            /*using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -54,11 +55,17 @@ namespace LoginStatistic.Data
                     transaction.Rollback();
                     throw new TransactionException($"The transaction failed, when trying to truncate {nameof(_context.Users)} and {_context.LoginAttempts} tables", e);
                 }
-            }
+            }*/
+
+            //Second approach
+            //_context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(_context.Users)}"); 
+
+            //Third approach
+            _context.RemoveRange(_context.Users.Include(a => a.LoginAttempts));
         }
         public User GetUserByEmail(string email)
         {
-            return _context.Users.Where(x => x.Email == email).Include(a => a.LoginAttempts).FirstOrDefault();
+            return Users.Include(a => a.LoginAttempts).FirstOrDefault(u => u.Email == email);
         }
         public bool SaveChanges()
         {

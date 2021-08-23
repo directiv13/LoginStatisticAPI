@@ -11,6 +11,7 @@ using LoginStatistic.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace LoginStatistic
 {
@@ -32,6 +33,7 @@ namespace LoginStatistic
 
             services.AddDbContext<LoginContext>(opt => opt.UseSqlServer(builder.ConnectionString));
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IUserRepo, UserRepo>();
         }
 

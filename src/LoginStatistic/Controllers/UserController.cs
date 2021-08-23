@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using LoginStatistic.Data;
-using LoginStatistic.Models;
+using LoginStatistic.Dtos;
 
 namespace LoginStatistic.Controllers
 {
@@ -10,25 +9,24 @@ namespace LoginStatistic.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepo _repo;
-        private readonly LoginContext _context;
-        public UserController(IUserRepo repository)
+        private UserManager manager;
+        public UserController(IUserRepo repository, IMapper mapper)
         {
-            _repo = repository;
+            manager = new UserManager(repository, mapper);
         }
 
         [HttpPost("{amount}", Name = "Init")]
-        public ActionResult Init(int amount)
+        public void Init(int amount)
         {
-            SeedData.EnsurePopulated(_repo, amount);
-            _repo.SaveChanges();
-            return Ok();
+            manager.PopulateData(amount);
         }
 
         [HttpGet("{email}", Name = "GetByEmail")]
-        public ActionResult<User> GetByEmail(string email)
+        public ActionResult<UserDto> GetByEmail(string email)
         {
-            return Ok(_repo.GetUserByEmail(email));
+            UserDto userDto = manager.GetUserByEmail(email);
+
+            return userDto != null ? userDto : NotFound();
         }
     }
 }
