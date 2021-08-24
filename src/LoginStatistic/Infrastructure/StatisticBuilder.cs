@@ -45,7 +45,7 @@ namespace LoginStatistic
             DateTime currentEnd = funcMetric(startTime);
             for(DateTime currentStart = startTime; currentEnd <= endTime; currentStart = funcMetric(currentStart), currentEnd = funcMetric(currentEnd))
             {
-                statisticResults.Add(new StatisticResultDto { Period = currentStart, Value = attempts.Where(a => a.AttemptTime >= currentStart && a.AttemptTime <= currentEnd).Count() });
+                statisticResults.Add(new StatisticResultDto { Period = currentStart, Value = attempts.Where(a => a.AttemptTime >= currentStart && a.AttemptTime < currentEnd).Count() });
             }
             return statisticResults;
         }

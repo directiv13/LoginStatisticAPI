@@ -11,6 +11,7 @@ using LoginStatistic.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using AutoMapper;
 
 namespace LoginStatistic
@@ -32,9 +33,14 @@ namespace LoginStatistic
             builder.Password = Configuration["Password"];
 
             services.AddDbContext<LoginContext>(opt => opt.UseSqlServer(builder.ConnectionString));
+            services.AddControllers().AddNewtonsoftJson(s =>
+            {
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<ILoginAttemptRepo, LoginAttemptRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
